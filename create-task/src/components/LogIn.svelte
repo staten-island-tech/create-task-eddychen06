@@ -3,22 +3,21 @@
     import * as Card from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
-    import { userStore } from "../store";  
+    import { userStore, isSignUp, isLoggedIn, userDetails } from "../store";  
 
     let email: String 
     let password: String
-    export let isSignUp = false
 
     function handleSignUp() {
 
-
         let id: Number = Math.floor(Math.random()*1000)
         $userStore[id] = {email, password}
-        status = true
+        $isLoggedIn = true
+        $userDetails = {"email": email}
     }   
 
     function switchToSignUp() {
-        isSignUp = true
+        $isSignUp = true
     }
 
   </script>
@@ -42,8 +41,8 @@
         </div>
       </form>
     </Card.Content>
-    <Card.Footer class="flex flex-col gap-y-2">
-		<Button class="w-full" on:click={handleSignUp}>Create account</Button>
+    <Card.Footer class="flex flex-col gap-y-4">
+		<Button class="w-full" on:click={handleSignUp}>Log In</Button>
         <Label>Don't have an account? <button class="underline" on:click={switchToSignUp}>Sign Up</button></Label>
 	</Card.Footer>
   </Card.Root>
