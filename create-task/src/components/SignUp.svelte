@@ -3,21 +3,40 @@
   import * as Card from "$lib/components/ui/card";
   import { Input } from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
-  import { userStore, isSignUp, isLoggedIn, userDetails } from "../store";
+  import { update, state } from "../store";
 
-  let email: String;
+
+  let username: String;
   let password: String;
 
-  function handleSignUp() {
-    if ($userStore.filter((user) => user.email === email)) {
-      console.log("user is already registered");
-    }
-    $isLoggedIn = true;
-  }
 
-  function switchToLogIn() {
-    $isSignUp = false;
-  }
+    function addUser() {
+        let users = $state.users
+        if (users.filter((user) => user.username === username).length > 0){
+            console.log("exists")
+        } else {
+            update(state => {
+            state.users.unshift({
+                id: state.users.length + 1,
+                username: username,
+                password: password,
+                portfolio: [],
+                transactions: [],
+            })
+            return state
+
+        })
+        }
+    }
+
+    function handleSwitchForm() {
+        update(state => {
+            state.logInForm = true
+            return state
+        })
+        
+    }
+  
 </script>
 
 <Card.Root class="w-[350px]">
@@ -31,9 +50,9 @@
     <form>
       <div class="grid w-full items-center gap-4">
         <div class="flex flex-col space-y-1.5">
-          <Label for="email">Email</Label>
-          <Input id="email" bind:value={email} />
-        </div>
+            <Label for="username">Username</Label>
+            <Input id="username" bind:value={username} />
+          </div>
         <div class="flex flex-col space-y-1.5">
           <Label for="password">Password</Label>
           <Input id="password" type="password" bind:value={password} />
@@ -42,9 +61,9 @@
     </form>
   </Card.Content>
   <Card.Footer class="flex flex-col gap-y-4">
-    <Button class="w-full" on:click={handleSignUp}>Create account</Button>
+    <Button class="w-full" on:click={addUser} >Create account</Button>
     <Label
-      >Have an account? <button class="underline" on:click={switchToLogIn}
+      >Have an account? <button class="underline" on:click={handleSwitchForm}
         >Log In</button
       ></Label
     >

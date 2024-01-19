@@ -1,20 +1,23 @@
-import { writable } from 'svelte/store'
-import user from './assets/users.json' 
+import { writable, get } from 'svelte/store'
 
-export let userStore = writable(user)
-
-export const isSignUp = writable<boolean>(localStorage.isSignUp === 'true')
-
-isSignUp.subscribe((value) => localStorage.isSignUp = JSON.stringify(value))
-
-export const isLoggedIn = writable<boolean>(localStorage.isLoggedIn === 'false')
-
-isLoggedIn.subscribe((value) => localStorage.isLoggedIn = JSON.stringify(value))
-
-interface User {
-    email: string
+const localState = localStorage.getItem('state')
+const initialState = {
+    users: [],
+    user: [],
+    loggedIn: false,
+    logInForm: null,
 }
 
-export const userDetails = writable<User>(JSON.parse(localStorage.getItem('user')))
-  
-userDetails.subscribe((value) => localStorage.user = JSON.stringify(value))
+if (!localState) {
+    // Set localStorage "state" to the "initialState"
+}
+
+const appState = localState ? JSON.parse(localState) : initialState
+
+export const state = writable(appState)
+export const update = callback => {
+    const updatedState = callback(get(state))
+
+    state.update(() => updatedState)
+    localStorage.setItem('state', JSON.stringify(updatedState))
+}
