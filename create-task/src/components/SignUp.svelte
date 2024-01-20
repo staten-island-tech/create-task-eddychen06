@@ -20,7 +20,10 @@
                 id: state.users.length + 1,
                 username: username,
                 password: password,
-                portfolio: [],
+                portfolio: {
+                  "cash": 10000,
+                  "stocks": []
+                },
                 transactions: [],
             })
             return state
